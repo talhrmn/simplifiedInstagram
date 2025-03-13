@@ -3,6 +3,7 @@ import styles from "@/app/components/image-component/styles.module.css";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useCallback, useState } from "react";
 import { apiClient } from "@/app/utils/apiClient";
+import { useDataImage } from "@/app/contexts/image-context/imageContext";
 
 const ImageComponent = ({
   image_id,
@@ -10,40 +11,64 @@ const ImageComponent = ({
   likes,
   dislikes,
 }: ImageDataProps) => {
-  const [imageLikes, setImageLikes] = useState<number>(likes);
-  const [imageDislikes, setImageDislikes] = useState<number>(dislikes);
+  const { updateImage } = useDataImage();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOnClickLike = useCallback(async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
     try {
       const response = await apiClient.post(`/images/${image_id}/like`);
-      console.log(response.data);
-      setImageLikes(response.data);
+      updateImage({ type: "like", image_id, likes: response.data });
     } catch (error: any) {
-      console.error("Failed to fetch image data");
+      console.error("Failed to like image", error);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  }, [image_id, updateImage, isLoading]);
 
   const handleOnClickDislike = useCallback(async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
     try {
       const response = await apiClient.post(`/images/${image_id}/dislike`);
-      setImageDislikes(response.data);
+      updateImage({ type: "dislike", image_id, dislikes: response.data });
     } catch (error: any) {
-      console.error("Failed to fetch image data");
+      console.error("Failed to dislike image", error);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  }, [image_id, updateImage, isLoading]);
 
   return (
     <div className={styles.container}>
-      <img key={image_id} src={image_url} className={styles.imageBox} />
+      <div className={styles.imageWrapper}>
+        <img
+          key={image_id}
+          src={image_url}
+          className={styles.imageBox}
+          alt=""
+        />
+      </div>
       <div className={styles.Actions}>
-        <div className={styles.dislike} onClick={handleOnClickDislike}>
+        <button
+          className={styles.dislike}
+          onClick={handleOnClickDislike}
+          disabled={isLoading}
+        >
           <ThumbsDown size={16} />
-          {imageDislikes}
-        </div>
-        <div className={styles.like} onClick={handleOnClickLike}>
+          <span>{dislikes}</span>
+        </button>
+        <button
+          className={styles.like}
+          onClick={handleOnClickLike}
+          disabled={isLoading}
+        >
           <ThumbsUp size={16} />
-          {imageLikes}
-        </div>
+          <span>{likes}</span>
+        </button>
       </div>
     </div>
   );
