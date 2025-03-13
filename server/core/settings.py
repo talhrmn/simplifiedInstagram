@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     APP_ROUTE: str
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8000
+    CORS_ORIGINS: List[str]
 
     API_PREFIX: str = "/api"
     API_VERSION: str = "v1"
@@ -19,7 +20,8 @@ class Settings(BaseSettings):
     REDIS_PORT: int
     REDIS_DB: int
 
-    CORS_ORIGINS: List[str]
+    IMAGE_DATA_URL: str
+    DEFAULT_IMAGE_LIMIT: int
 
     class Config:
         env_file = ".env"

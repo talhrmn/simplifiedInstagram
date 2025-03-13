@@ -12,9 +12,9 @@ from fastapi import FastAPI
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    redis_client.connect()
+    await redis_client.connect()
     yield
-    redis_client.close()
+    await redis_client.close()
 
 
 app = FastAPI(

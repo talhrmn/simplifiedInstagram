@@ -2,3 +2,5 @@ pydantic_settings
 fastapi
 uvicorn
 redis
+httpx
+pydantic
