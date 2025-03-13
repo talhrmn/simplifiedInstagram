@@ -16,7 +16,7 @@ const ImagesPageComponent = () => {
         const response = await apiClient.get("/images");
         setImageData(response.data);
       } catch (error: unknown) {
-        console.error("Failed to fetch image data");
+        console.error("Failed to fetch image data: ", error);
         setError(true);
       } finally {
         setIsLoading(false);
