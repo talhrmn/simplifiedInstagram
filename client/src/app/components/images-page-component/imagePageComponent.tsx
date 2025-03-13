@@ -1,11 +1,11 @@
 import ImageComponent from "@/app/components/image-component/imageComponent";
-import { ImageDataProps } from "@/app/components/images-page-component/types";
+import styles from "@/app/components/images-page-component/styles.module.css";
+import { useDataImage } from "@/app/contexts/image-context/imageContext";
 import { apiClient } from "@/app/utils/apiClient";
 import { useEffect, useState } from "react";
-import styles from "@/app/components/images-page-component/styles.module.css";
 
 const ImagesPageComponent = () => {
-  const [imageData, setImageData] = useState<ImageDataProps[]>([]);
+  const { imageData, setImageData, updateImage } = useDataImage();
   const [loading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
@@ -24,7 +24,7 @@ const ImagesPageComponent = () => {
     };
 
     fetchImages();
-  }, []);
+  }, [setImageData]);
 
   const errorPage = <div className={styles.errorPage}>Error</div>;
   const loadingPage = <div className={styles.loadingPage}>Loading</div>;
@@ -38,14 +38,7 @@ const ImagesPageComponent = () => {
     </div>
   );
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.title}>
-        <h3 className={styles.h3Title}>Welcome to Simplified Instagram</h3>
-      </div>
-      {loading ? loadingPage : error ? errorPage : imageGrid}
-    </div>
-  );
+  return <>{loading ? loadingPage : error ? errorPage : imageGrid}</>;
 };
 
 export default ImagesPageComponent;
