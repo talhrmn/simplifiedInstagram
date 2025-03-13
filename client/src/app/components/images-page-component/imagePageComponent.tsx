@@ -5,7 +5,7 @@ import { apiClient } from "@/app/utils/apiClient";
 import { useEffect, useState } from "react";
 
 const ImagesPageComponent = () => {
-  const { imageData, setImageData, updateImage } = useDataImage();
+  const { imageData, setImageData } = useDataImage();
   const [loading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
@@ -15,9 +15,9 @@ const ImagesPageComponent = () => {
       try {
         const response = await apiClient.get("/images");
         setImageData(response.data);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Failed to fetch image data");
-        setError(error);
+        setError(true);
       } finally {
         setIsLoading(false);
       }

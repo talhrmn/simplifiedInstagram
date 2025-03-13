@@ -3,7 +3,7 @@ from typing import Optional
 import redis.asyncio as redis
 import httpx
 
-from server.core.settings import server_settings
+from app.core.settings import server_settings
 
 
 class RedisClient:

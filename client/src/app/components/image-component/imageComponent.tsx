@@ -21,7 +21,7 @@ const ImageComponent = ({
     try {
       const response = await apiClient.post(`/images/${image_id}/like`);
       updateImage({ type: "like", image_id, likes: response.data });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to like image", error);
     } finally {
       setIsLoading(false);
@@ -35,7 +35,7 @@ const ImageComponent = ({
     try {
       const response = await apiClient.post(`/images/${image_id}/dislike`);
       updateImage({ type: "dislike", image_id, dislikes: response.data });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to dislike image", error);
     } finally {
       setIsLoading(false);
