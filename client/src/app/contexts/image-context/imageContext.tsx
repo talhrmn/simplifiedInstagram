@@ -1,4 +1,5 @@
 import { ImageDataProps } from "@/app/components/images-page-component/types";
+import { BASE_API_URL, BASE_API_VERSION } from "@/app/consts";
 import {
   ImageContextProps,
   ImageUpdateProps,
@@ -14,7 +15,7 @@ import {
 
 const imageDataContext = createContext<ImageContextProps | null>(null);
 
-export const ImageDataProvidor: React.FC<{ children: ReactNode }> = ({
+export const ImageDataProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [imageData, setImageData] = useState<ImageDataProps[]>([]);
@@ -51,7 +52,7 @@ export const ImageDataProvidor: React.FC<{ children: ReactNode }> = ({
   );
 
   useEffect(() => {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_API_VERSION}/sse`;
+    const apiUrl = `${BASE_API_URL}/${BASE_API_VERSION}/sse`;
 
     const eventSource = new EventSource(apiUrl);
 
