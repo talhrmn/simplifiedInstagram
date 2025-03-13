@@ -27,27 +27,27 @@ async def get_all_images(redis_client: redis.Redis = Depends(get_redis_client)) 
     return image_data
 
 
-@router.post("/{image_id}/like")
+@router.post("/{image_id}/like", response_model=int)
 async def like_image(
         image_id: str,
         redis_client: redis.Redis = Depends(get_redis_client)
-):
+) -> int:
     if not await image_handler.check_if_image_exists(image_id=image_id, redis_client=redis_client):
         raise HTTPException(status_code=404, detail="Image not found")
     try:
-        await image_handler.like_image(image_id=image_id, redis_client=redis_client)
+        return await image_handler.like_image(image_id=image_id, redis_client=redis_client)
     except redis.ConnectionError as conn_err:
         raise HTTPException(status_code=500, detail=f"Connection error: {conn_err}")
 
 
-@router.post("/{image_id}/dislike")
+@router.post("/{image_id}/dislike", response_model=int)
 async def dislike_image(
         image_id: str,
         redis_client: redis.Redis = Depends(get_redis_client)
-):
+) -> int:
     if not await image_handler.check_if_image_exists(image_id=image_id, redis_client=redis_client):
         raise HTTPException(status_code=404, detail="Image not found")
     try:
-        await image_handler.dislike_image(image_id=image_id, redis_client=redis_client)
+        return await image_handler.dislike_image(image_id=image_id, redis_client=redis_client)
     except redis.ConnectionError as conn_err:
         raise HTTPException(status_code=500, detail=f"Connection error: {conn_err}")
