@@ -1,12 +1,13 @@
+import json
 from typing import List
 
 import redis.asyncio as redis
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 
-from server.app.dependencies import get_redis_client
-from server.app.handlers.images import image_handler
-from server.app.schemas.images import ImageDataSchema, LikesRatio, ImageData
+from app.dependencies import get_redis_client
+from app.handlers.images import image_handler
+from app.schemas.images import ImageDataSchema, ImageData
 
 router = APIRouter()
 
@@ -35,7 +36,14 @@ async def like_image(
     if not await image_handler.check_if_image_exists(image_id=image_id, redis_client=redis_client):
         raise HTTPException(status_code=404, detail="Image not found")
     try:
-        return await image_handler.like_image(image_id=image_id, redis_client=redis_client)
+        update_likes = await image_handler.like_image(image_id=image_id, redis_client=redis_client)
+        update_data = {
+            "type": "like",
+            "image_id": image_id,
+            "likes": update_likes
+        }
+        await redis_client.publish("image_updates", json.dumps(update_data))
+        return update_likes
     except redis.ConnectionError as conn_err:
         raise HTTPException(status_code=500, detail=f"Connection error: {conn_err}")
 
@@ -48,6 +56,13 @@ async def dislike_image(
     if not await image_handler.check_if_image_exists(image_id=image_id, redis_client=redis_client):
         raise HTTPException(status_code=404, detail="Image not found")
     try:
-        return await image_handler.dislike_image(image_id=image_id, redis_client=redis_client)
+        update_dislikes = await image_handler.dislike_image(image_id=image_id, redis_client=redis_client)
+        update_data = {
+            "type": "like",
+            "image_id": image_id,
+            "dislikes": update_dislikes
+        }
+        await redis_client.publish("image_updates", json.dumps(update_data))
+        return update_dislikes
     except redis.ConnectionError as conn_err:
         raise HTTPException(status_code=500, detail=f"Connection error: {conn_err}")
