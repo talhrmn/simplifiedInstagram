@@ -4,6 +4,7 @@ import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useCallback, useState } from "react";
 import { apiClient } from "@/app/utils/apiClient";
 import { useDataImage } from "@/app/contexts/image-context/imageContext";
+import Image from "next/image";
 
 const ImageComponent = ({
   image_id,
@@ -45,12 +46,16 @@ const ImageComponent = ({
   return (
     <div className={styles.container}>
       <div className={styles.imageWrapper}>
-        <img
-          key={image_id}
-          src={image_url}
-          className={styles.imageBox}
-          alt=""
-        />
+        <div className={styles.imageBox}>
+          <Image
+            key={image_id}
+            src={image_url}
+            alt=""
+            layout="fill" // Makes the image fill the parent container
+            objectFit="cover" // Ensures the image behaves like the `object-fit: cover;` in your CSS
+            className={styles.imageBox} // Apply the styles
+          />
+        </div>
       </div>
       <div className={styles.Actions}>
         <button
