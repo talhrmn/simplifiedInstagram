@@ -1,0 +1,47 @@
+.container {
+  padding: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.15);
+  transform: scale(1.2);
+}
+
+.imageBox {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
+  max-width: 12rem;
+  max-height: 12rem;
+}
+
+.Actions {
+  visibility: hidden;
+  z-index: 1;
+  display: flex;
+  justify-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.container:hover .Actions {
+  visibility: visible;
+}
+
+.like,
+.dislike {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.like:hover,
+.dislike:hover {
+  opacity: 1;
+}
