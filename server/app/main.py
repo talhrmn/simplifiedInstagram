@@ -4,9 +4,9 @@ import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from server.app.views.api import api_router
-from server.clients.redis_client import redis_client
-from server.core.settings import server_settings
+from app.views.api import api_router
+from app.clients.redis_client import redis_client
+from app.core.settings import server_settings
 from fastapi import FastAPI
 
 
@@ -42,6 +42,6 @@ def root():
     return RedirectResponse(url=f"{server_settings.API_PREFIX}/docs")
 
 
-if __name__ == '__main__':
-    uvicorn.run(app=server_settings.APP_ROUTE, host=server_settings.APP_HOST, port=server_settings.APP_PORT,
-                reload=True)
+# if __name__ == '__main__':
+#     uvicorn.run(app=server_settings.APP_ROUTE, host=server_settings.APP_HOST, port=server_settings.APP_PORT,
+#                 reload=True)
