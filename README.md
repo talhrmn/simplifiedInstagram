@@ -2,6 +2,8 @@
 
 A simple web app where you can browse 100 images, like or dislike them, and export your votes as a CSV file. Votes are saved persistently, and updates happen in real time.
 
+![img.png](img.png)
+
 ## Tech Stack
 
 ### Backend: FastAPI
@@ -75,6 +77,8 @@ The app runs in three containers:
 - Click thumbs up/down to like or dislike images
 - See vote counts update instantly
 - Export votes as a CSV file with one click
+
+![img_1.png](img_1.png)
 
 ### Tests
 - There are a number of tests you can run
