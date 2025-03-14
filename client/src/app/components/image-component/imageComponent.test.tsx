@@ -4,14 +4,12 @@ import ImageComponent from '@/app/components/image-component/imageComponent';
 import { ImageDataContext } from '@/app/contexts/image-context/imageContext';
 import { apiClient } from '@/app/utils/apiClient';
 
-// Mock the API client
 jest.mock('@/app/utils/apiClient', () => ({
   apiClient: {
     post: jest.fn()
   }
 }));
 
-// Mock next/image since it's not available in the test environment
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props) => {
@@ -74,7 +72,6 @@ describe('ImageComponent', () => {
 
     const dislikeButton = screen.getByText('5').closest('button');
     fireEvent.click(dislikeButton);
-
     await waitFor(() => {
       expect(apiClient.post).toHaveBeenCalledWith('/images/test123/dislike');
       expect(mockUpdateImage).toHaveBeenCalledWith({ type: 'dislike', image_id: 'test123', dislikes: 6 });
@@ -93,7 +90,6 @@ describe('ImageComponent', () => {
 
     const likeButton = screen.getByText('10').closest('button');
     fireEvent.click(likeButton);
-
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith('Failed to like image', expect.any(Error));
       expect(mockUpdateImage).not.toHaveBeenCalled();

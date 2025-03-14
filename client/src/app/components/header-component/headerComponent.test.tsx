@@ -27,7 +27,6 @@ describe('HeaderComponent', () => {
   });
 
   it('exports data as CSV when export button is clicked', () => {
-    // Mock DOM methods
     const mockAppendChild = jest.fn();
     const mockRemoveChild = jest.fn();
     const mockLinkClick = jest.fn();
@@ -53,7 +52,6 @@ describe('HeaderComponent', () => {
 
     const exportButton = screen.getByText('Export').closest('button');
     fireEvent.click(exportButton);
-
     expect(mockLink.setAttribute).toHaveBeenCalledWith('href', 'mock-url');
     expect(mockLink.setAttribute).toHaveBeenCalledWith('download', 'simplified_instagram_data.csv');
     expect(mockAppendChild).toHaveBeenCalled();
@@ -62,11 +60,11 @@ describe('HeaderComponent', () => {
   });
 
   it('handles export errors', () => {
-    // Mock console.error and alert
+
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
 
-    // Force an error during export
+
     URL.createObjectURL = jest.fn().mockImplementation(() => {
       throw new Error('Export failed');
     });
@@ -79,10 +77,8 @@ describe('HeaderComponent', () => {
 
     const exportButton = screen.getByText('Export').closest('button');
     fireEvent.click(exportButton);
-
     expect(consoleSpy).toHaveBeenCalledWith('Failed to export data:', expect.any(Error));
     expect(alertSpy).toHaveBeenCalledWith('Failed to export data. Please try again.');
-
     consoleSpy.mockRestore();
     alertSpy.mockRestore();
   });

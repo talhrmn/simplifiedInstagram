@@ -1,17 +1,15 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
-import { apiClient } from './utils/apiClient';
+import { apiClient } from '@/app/utils/apiClient';
 
-// Mock the API client
-jest.mock('./utils/apiClient', () => ({
+jest.mock('@/app/utils/apiClient', () => ({
   apiClient: {
     get: jest.fn(),
     post: jest.fn()
   }
 }));
 
-// Mock next/image
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props) => {
@@ -41,25 +39,20 @@ describe('Integration Test - Home Page', () => {
   it('renders the complete application flow', async () => {
     render(<Home />);
 
-    // Initially shows loading state
     expect(screen.getByText('Loading')).toBeInTheDocument();
 
-    // Wait for images to load
     await waitFor(() => {
       expect(apiClient.get).toHaveBeenCalledWith('/images');
       expect(screen.getByText('Welcome to Simplified Instagram')).toBeInTheDocument();
     });
 
-    // Test like functionality
     const likeButtons = await screen.findAllByText(/[0-9]+/);
-    fireEvent.click(likeButtons[1]); // Click on the like button
+    fireEvent.click(likeButtons[1]);
 
     await waitFor(() => {
       expect(apiClient.post).toHaveBeenCalledWith(expect.stringContaining('like'));
     });
 
-    // Test export functionality
-    // Mock DOM methods for export
     const mockAppendChild = jest.fn();
     const mockRemoveChild = jest.fn();
     const mockLinkClick = jest.fn();
