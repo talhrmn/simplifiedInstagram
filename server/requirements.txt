@@ -4,3 +4,6 @@ uvicorn
 redis
 httpx
 pydantic
+pytest
+httpx
+pytest-asyncio
