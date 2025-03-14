@@ -11,6 +11,12 @@ router = APIRouter()
 
 @router.get("/")
 async def sse(request: Request, redis_client: redis.Redis = Depends(get_redis_client)):
+    """
+    Server Side Event endpoint
+    :param request:
+    :param redis_client:
+    :return:
+    """
     async def event_generator():
         redis_pubsub = redis_client.pubsub()
 

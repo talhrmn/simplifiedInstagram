@@ -1,5 +1,5 @@
 import { ImageDataProps } from "@/app/components/images-page-component/types";
-import { BASE_API_URL, BASE_API_VERSION } from "@/app/consts";
+import { baseUrl } from "@/app/consts";
 import {
   ImageContextProps,
   ImageUpdateProps,
@@ -52,7 +52,7 @@ export const ImageDataProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   useEffect(() => {
-    const apiUrl = `${BASE_API_URL}/${BASE_API_VERSION}/sse`;
+    const apiUrl = `${baseUrl}/sse`;
 
     const eventSource = new EventSource(apiUrl);
 

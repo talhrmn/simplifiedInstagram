@@ -1,11 +1,12 @@
 import pytest
 from fastapi.testclient import TestClient
-
+import redis.asyncio as redis
 from app.dependencies import get_redis_client
 from app.main import app
 from unittest.mock import MagicMock
 
 client = TestClient(app)
+
 
 @pytest.mark.asyncio
 async def test_get_all_images():
@@ -62,6 +63,7 @@ async def test_like_image():
 @pytest.mark.asyncio
 async def test_like_image_not_found():
     mock_redis_client = MagicMock()
+
     async def mock_exists(image_id):
         return 0
 
@@ -73,3 +75,64 @@ async def test_like_image_not_found():
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Image not found"}
+
+
+@pytest.mark.asyncio
+async def test_dislike_image():
+    async def mock_exists(image_id):
+        return 1
+
+    async def mock_hincrby(image_id, field, value):
+        return 3
+
+    async def mock_publish(channel, message):
+        pass
+
+    mock_redis_client = MagicMock()
+    mock_redis_client.exists = mock_exists
+    mock_redis_client.hincrby = mock_hincrby
+    mock_redis_client.publish = mock_publish
+
+    app.dependency_overrides[get_redis_client] = lambda: mock_redis_client
+
+    response = client.post("/api/v1/images/image1/dislike")
+
+    assert response.status_code == 200
+    assert response.json() == 3
+
+
+@pytest.mark.asyncio
+async def test_dislike_image_not_found():
+    mock_redis_client = MagicMock()
+
+    async def mock_exists(image_id):
+        return 0
+
+    mock_redis_client.exists = mock_exists
+
+    app.dependency_overrides[get_redis_client] = lambda: mock_redis_client
+
+    response = client.post("/api/v1/images/image1/dislike")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Image not found"}
+
+
+@pytest.mark.asyncio
+async def test_redis_connection_error_on_like():
+    async def mock_exists(image_id):
+        return 1
+
+    async def mock_hincrby(image_id, field, value):
+        raise redis.ConnectionError("Redis connection error")
+
+    mock_redis_client = MagicMock()
+    mock_redis_client.exists = mock_exists
+    mock_redis_client.hincrby = mock_hincrby
+
+    app.dependency_overrides[get_redis_client] = lambda: mock_redis_client
+
+    response = client.post("/api/v1/images/image1/like")
+
+    assert response.status_code == 500
+    assert "Connection error" in response.json()["detail"]
