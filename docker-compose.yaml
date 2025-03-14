@@ -6,15 +6,13 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "http://localhost:5001/api"
+        NEXT_PUBLIC_API_VERSION: "v1"
     ports:
       - "3000:3000"
     depends_on:
       - server
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:5001/api
-      - NEXT_PUBLIC_API_VERSION=v1
-    networks:
-      - app-network
 
   # Server application
   server:
