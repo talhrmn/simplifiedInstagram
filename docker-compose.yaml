@@ -10,12 +10,9 @@ services:
       - "3000:3000"
     depends_on:
       - server
-#    environment:
-#      - NEXT_PUBLIC_API_URL=http://localhost:5001
-#      - NEXT_PUBLIC_API_VERSION=v1
-    volumes:
-      - ./client/.env.local:/src/.env.local
-
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5001/api
+      - NEXT_PUBLIC_API_VERSION=v1
     networks:
       - app-network
 
@@ -29,9 +26,20 @@ services:
     depends_on:
       - redis
     environment:
+      - APP_NAME=Simplified Instagram
+      - APP_ROUTE=app.main:app
+      - APP_HOST=0.0.0.0
+      - APP_PORT=5000
+      - CORS_ORIGINS=["*"]
+      - API_PREFIX=/api
+      - API_VERSION=v1
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
+      - IMAGE_DATA_URL=https://picsum.photos/v2/list?page=1&limit
+      - DEFAULT_IMAGE_LIMIT=100
+
+
     networks:
       - app-network
 
