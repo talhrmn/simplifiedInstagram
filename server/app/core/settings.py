@@ -7,6 +7,10 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
+    """
+    App Config
+    """
+
     APP_NAME: str = "Simplified Instagram"
     APP_ROUTE: str
     APP_HOST: str = "0.0.0.0"

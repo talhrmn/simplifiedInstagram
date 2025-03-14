@@ -7,6 +7,9 @@ from app.core.settings import server_settings
 
 
 class RedisClient:
+    """
+    A client to manage redis initialization
+    """
 
     def __init__(self):
         self.host = server_settings.REDIS_HOST

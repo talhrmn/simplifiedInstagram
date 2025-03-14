@@ -14,6 +14,11 @@ router = APIRouter()
 
 @router.get("/", response_model=List[ImageDataSchema])
 async def get_all_images(redis_client: redis.Redis = Depends(get_redis_client)) -> List[ImageDataSchema]:
+    """
+    Get all image data currently in the redis db
+    :param redis_client: client to interact with the redis db
+    :return: A list of ImageDataSchema Obj
+    """
     async with redis_client.pipeline(transaction=False) as async_pipeline:
         image_ids = [image_id async for image_id in redis_client.scan_iter()]
         for image_id in image_ids:
@@ -33,6 +38,12 @@ async def like_image(
         image_id: str,
         redis_client: redis.Redis = Depends(get_redis_client)
 ) -> int:
+    """
+    Vote like on a specific image by id
+    :param image_id: string
+    :param redis_client: client to interact with the redis db
+    :return: The updated likes count
+    """
     if not await image_handler.check_if_image_exists(image_id=image_id, redis_client=redis_client):
         raise HTTPException(status_code=404, detail="Image not found")
     try:
@@ -53,6 +64,12 @@ async def dislike_image(
         image_id: str,
         redis_client: redis.Redis = Depends(get_redis_client)
 ) -> int:
+    """
+    Vote dislike on a specific image by id
+    :param image_id: string
+    :param redis_client: client to interact with the redis db
+    :return: The updated dislikes count
+    """
     if not await image_handler.check_if_image_exists(image_id=image_id, redis_client=redis_client):
         raise HTTPException(status_code=404, detail="Image not found")
     try:

@@ -10,9 +10,12 @@ services:
       - "3000:3000"
     depends_on:
       - server
-    environment:
-      - NEXT_PUBLIC_API_URL=http://server:5000
-      - NEXT_PUBLIC_API_VERSION=v1
+#    environment:
+#      - NEXT_PUBLIC_API_URL=http://localhost:5001
+#      - NEXT_PUBLIC_API_VERSION=v1
+    volumes:
+      - ./client/.env.local:/src/.env.local
+
     networks:
       - app-network
 

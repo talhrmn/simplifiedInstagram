@@ -2,6 +2,10 @@ import redis.asyncio as redis
 
 
 class ImagesHandler:
+    """
+    A simple handler to deal with image related actions
+    """
+
     def __init__(self):
         pass
 
